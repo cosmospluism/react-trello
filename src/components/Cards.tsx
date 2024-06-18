@@ -10,12 +10,13 @@ const Card = styled.div<{ $isDragging: boolean }>`
 
 interface ICardsProps {
   todoText: string;
+  todoId: number;
   index: number;
 }
 
-function Cards({ todoText, index }: ICardsProps) {
+function Cards({ todoText, todoId, index }: ICardsProps) {
   return (
-    <Draggable key={todoText} draggableId={todoText} index={index}>
+    <Draggable key={todoId} draggableId={todoId + ""} index={index}>
       {(drag, snapshot) => (
         <Card
           ref={drag.innerRef}

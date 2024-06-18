@@ -37,17 +37,19 @@ const Main2 = styled.div`
 `;
 
 function App() {
+  // const [board, setBoard] = useRecoilState(boardState);
+
   const [todos, setTodos] = useRecoilState(todoState);
   const onDragEnd = (info: DropResult) => {
-    console.log(info);
-    const { destination, source, draggableId } = info;
+    const { destination, source } = info;
     if (!destination) return;
     // 같은 보드 내에서 이동하기
     if (destination.droppableId === source.droppableId) {
       setTodos((allBoards) => {
         const todoCopy = [...allBoards[source.droppableId]];
+        const todoObj = todoCopy[source.index];
         todoCopy.splice(source.index, 1);
-        todoCopy.splice(destination.index, 0, draggableId);
+        todoCopy.splice(destination.index, 0, todoObj);
         return {
           ...allBoards,
           [source.droppableId]: todoCopy,
@@ -56,23 +58,12 @@ function App() {
     }
     // 다른 보드 간 이동하기
     if (destination.droppableId !== source.droppableId) {
-      // 삭제 구역으로 이동 (삭제)
-      if (destination.droppableId === "delete_zone") {
-        setTodos((allBoards) => {
-          const todoCopy = [...allBoards[source.droppableId]];
-          // todoCopy.splice(source.index, 1);
-          return {
-            ...allBoards,
-            [source.droppableId]: todoCopy,
-          };
-        });
-      }
-    } else {
       setTodos((allBoards) => {
         const sourceCopy = [...allBoards[source.droppableId]];
         const destinationCopy = [...allBoards[destination.droppableId]];
+        const sourceObj = sourceCopy[source.index];
         sourceCopy.splice(source.index, 1);
-        destinationCopy.splice(destination.index, 0, draggableId);
+        destinationCopy.splice(destination.index, 0, sourceObj);
         return {
           ...allBoards,
           [source.droppableId]: sourceCopy,
@@ -80,6 +71,18 @@ function App() {
         };
       });
     }
+
+    // 삭제 구역으로 이동 (삭제)
+    // if (destination.droppableId === "delete_zone") {
+    //   setTodos((allBoards) => {
+    //     const todoCopy = [...allBoards[source.droppableId]];
+    //     todoCopy.splice(source.index, 1);
+    //     return {
+    //       ...allBoards,
+    //       [source.droppableId]: todoCopy,
+    //     };
+    //   });
+    // }
   };
 
   return (
