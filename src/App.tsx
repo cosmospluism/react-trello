@@ -38,7 +38,6 @@ const Main2 = styled.div`
 
 function App() {
   // const [board, setBoard] = useRecoilState(boardState);
-
   const [todos, setTodos] = useRecoilState(todoState);
   const onDragEnd = (info: DropResult) => {
     const { destination, source } = info;
@@ -84,6 +83,18 @@ function App() {
     //   });
     // }
   };
+
+  // const handleMakeBoard = () => {
+  //   const newBoard = {
+  //     boardTitle: "new",
+  //   };
+  //   setBoard(oldBoards =>
+  //     return {
+  //       ...oldBoards,
+
+  //     }
+  //   )
+  // };
 
   return (
     <div>

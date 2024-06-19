@@ -12,18 +12,14 @@ export interface ITodoState {
 export const todoState = atom<ITodoState>({
   key: "todo",
   default: {
-    Todo: [
-      { id: 12312, text: "what" },
-      { id: 222, text: "the" },
-    ],
+    Todo: [],
     Done: [],
-    welcome: [],
   },
 });
 
-// export const boardState = atom<ITodoState>({
+// export const boardState = atom({
 //   key: "board",
 //   default: {
-//     title: ["sample1", "sample2"],
+//     board: [{}],
 //   },
 // });

@@ -4,7 +4,7 @@ import Cards from "./Cards";
 import DeleteZone from "./DeleteZone";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { ITodo, todoState } from "../atoms";
 import { useForm } from "react-hook-form";
 
@@ -41,6 +41,7 @@ const BoardTitle = styled.div`
   justify-content: space-between;
   h3 {
     font-size: 18px;
+    margin-top: 5px;
     margin-bottom: 20px;
     text-indent: 10px;
   }
@@ -55,11 +56,25 @@ interface IBoard {
   todos: ITodo[];
 }
 
+interface IData {
+  registerTodo: string;
+}
+
 function Boards({ todos, boardId }: IBoard) {
-  const [todo, setTodo] = useRecoilState(todoState);
-  const { register, handleSubmit } = useForm();
-  const onValid = (data: any) => {
-    console.log(data);
+  const setTodo = useSetRecoilState(todoState);
+  const { register, handleSubmit, setValue } = useForm<IData>();
+  const onValid = (data: IData) => {
+    const newTodo = {
+      id: Date.now(),
+      text: data.registerTodo,
+    };
+    setTodo((oldBoards) => {
+      return {
+        ...oldBoards,
+        [boardId]: [...oldBoards[boardId], newTodo],
+      };
+    });
+    setValue("registerTodo", "");
   };
 
   return (
