@@ -12,14 +12,18 @@ export interface ITodoState {
 export const todoState = atom<ITodoState>({
   key: "todo",
   default: {
-    Todo: [],
-    Done: [],
+    // Todo: [],
+    // Done: [],
   },
 });
 
-// export const boardState = atom({
-//   key: "board",
-//   default: {
-//     board: [{}],
-//   },
-// });
+export interface IBoard {
+  id: number;
+  name: string;
+  cards: ITodo[];
+}
+
+export const boardState = atom<IBoard[]>({
+  key: "board",
+  default: [],
+});

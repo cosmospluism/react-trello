@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { todoState } from "./atoms";
+import { IBoard, boardState, todoState } from "./atoms";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import Head from "./components/Head";
 // import DeleteZone from "./components/DeleteZone";
@@ -37,7 +37,7 @@ const Main2 = styled.div`
 `;
 
 function App() {
-  // const [board, setBoard] = useRecoilState(boardState);
+  const [boards, setBoards] = useRecoilState(boardState);
   const [todos, setTodos] = useRecoilState(todoState);
   const onDragEnd = (info: DropResult) => {
     const { destination, source } = info;
@@ -84,17 +84,17 @@ function App() {
     // }
   };
 
-  // const handleMakeBoard = () => {
-  //   const newBoard = {
-  //     boardTitle: "new",
-  //   };
-  //   setBoard(oldBoards =>
-  //     return {
-  //       ...oldBoards,
-
-  //     }
-  //   )
-  // };
+  const handleMakeBoard = () => {
+    const newBoard = {
+      id: Date.now(),
+      name: "new",
+      cards: todos,
+    };
+    setBoards((boards) => {
+      return { ...boards, newBoard };
+    });
+  };
+  console.log(boards);
 
   return (
     <div>
@@ -102,9 +102,12 @@ function App() {
       <Main>
         <Main1>
           <span>Nadia</span>
-          <button>+ New Board</button>
+          <button onClick={handleMakeBoard}>+ New Board</button>
         </Main1>
         <Main2>
+          {boards.map((board) => (
+            <div key={board.id}>{board.name}</div>
+          ))}
           <DragDropContext onDragEnd={onDragEnd}>
             {Object.keys(todos).map((boardId) => (
               <Boards todos={todos[boardId]} boardId={boardId} key={boardId} />
