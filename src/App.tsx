@@ -19,21 +19,46 @@ const Main1 = styled.div`
   font-weight: 700;
   color: white;
   gap: 30px;
-  button {
-    border: none;
-    border-radius: 5px;
-    background-color: rgba(299, 299, 299, 0.5);
-    padding: 10px;
-    font-size: 15px;
-    color: #c7a7d9;
-    cursor: pointer;
-  }
 `;
 
 const Main2 = styled.div`
   display: flex;
   margin: 30px 40px;
-  /* gap: 20px; */
+`;
+
+const AddButton = styled.button`
+  border: none;
+  border-radius: 5px;
+  background-color: rgba(299, 299, 299, 0.5);
+  padding: 10px;
+  font-size: 15px;
+  color: #c7a7d9;
+  cursor: pointer;
+  transition: all 0.3s;
+  &:active {
+    background-color: rgba(299, 299, 299, 0.8);
+  }
+`;
+
+const BoardSample = styled.div`
+  background-color: rgba(299, 299, 299, 0.55);
+  padding: 20px;
+  border-radius: 10px;
+  width: 250px;
+  height: 400px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  margin-right: 20px;
+  input {
+    border: none;
+    padding: 5px;
+    text-indent: 10px;
+    outline: none;
+    background-color: transparent;
+    font-size: 18px;
+    &:focus::placeholder {
+      color: transparent;
+    }
+  }
 `;
 
 function App() {
@@ -84,30 +109,34 @@ function App() {
     // }
   };
 
-  const handleMakeBoard = () => {
-    const newBoard = {
-      id: Date.now(),
-      name: "new",
-      cards: todos,
+  const addBoard = () => {
+    const newBoard: IBoard = {
+      id: boards.length + 1,
+      name: "board name",
+      cards: [],
     };
-    setBoards((boards) => {
-      return { ...boards, newBoard };
-    });
+    setBoards([...boards, newBoard]);
   };
-  console.log(boards);
+
+  const onSubmitBoardName = () => {};
 
   return (
     <div>
       <Head />
       <Main>
         <Main1>
-          <span>Nadia</span>
-          <button onClick={handleMakeBoard}>+ New Board</button>
+          <span>Your Name</span>
+          <AddButton onClick={addBoard}>+ New Board</AddButton>
         </Main1>
         <Main2>
-          {boards.map((board) => (
-            <div key={board.id}>{board.name}</div>
-          ))}
+          {boards &&
+            boards.map((board) => (
+              <BoardSample key={board.id}>
+                <form onSubmit={onSubmitBoardName}>
+                  <input type="text" placeholder="board name" />
+                </form>
+              </BoardSample>
+            ))}
           <DragDropContext onDragEnd={onDragEnd}>
             {Object.keys(todos).map((boardId) => (
               <Boards todos={todos[boardId]} boardId={boardId} key={boardId} />
