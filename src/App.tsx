@@ -1,10 +1,17 @@
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { IBoard, boardState, todoState } from "./atoms";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
 import Head from "./components/Head";
 // import DeleteZone from "./components/DeleteZone";
 import Boards from "./components/Boards";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 const Main = styled.div``;
 
@@ -15,10 +22,21 @@ const Main1 = styled.div`
   padding: 15px 50px;
   display: flex;
   align-items: center;
+  gap: 10px;
+`;
+
+const UserName = styled.input`
+  all: unset;
   font-size: 25px;
   font-weight: 700;
   color: white;
-  gap: 30px;
+  width: 200px;
+  &::placeholder {
+    color: white;
+  }
+  &:focus::placeholder {
+    color: transparent;
+  }
 `;
 
 const Main2 = styled.div`
@@ -40,8 +58,9 @@ const AddButton = styled.button`
   }
 `;
 
-const BoardSample = styled.div`
-  background-color: rgba(299, 299, 299, 0.55);
+const BoardSample = styled.div<{ $isDragging: boolean }>`
+  background-color: ${(props) =>
+    props.$isDragging ? "#DFD3EF" : "rgba(299, 299, 299, 0.55)"};
   padding: 20px;
   border-radius: 10px;
   width: 250px;
@@ -60,6 +79,14 @@ const BoardSample = styled.div`
     }
   }
 `;
+
+const BoardContainer = styled.div`
+  display: flex;
+`;
+
+interface IUsername {
+  username: string;
+}
 
 function App() {
   const [boards, setBoards] = useRecoilState(boardState);
@@ -118,26 +145,57 @@ function App() {
     setBoards([...boards, newBoard]);
   };
 
-  const onSubmitBoardName = () => {};
+  const { register, handleSubmit } = useForm<IUsername>();
+  const [username, setUsername] = useState("");
+  const handleSubmitUsername = (data: any) => {
+    setUsername(data);
+  };
+  console.log(username);
 
   return (
     <div>
       <Head />
       <Main>
         <Main1>
-          <span>Your Name</span>
+          <form onSubmit={handleSubmit(handleSubmitUsername)}>
+            <UserName
+              value={username}
+              {...register("username")}
+              placeholder="write your name"
+            />
+            <h3></h3>
+          </form>
           <AddButton onClick={addBoard}>+ New Board</AddButton>
         </Main1>
         <Main2>
-          {boards &&
-            boards.map((board) => (
-              <BoardSample key={board.id}>
-                <form onSubmit={onSubmitBoardName}>
-                  <input type="text" placeholder="board name" />
-                </form>
-              </BoardSample>
-            ))}
           <DragDropContext onDragEnd={onDragEnd}>
+            {/* <Droppable droppableId="dropBoard">
+              {(drop, index) => (
+                <div ref={drop.innerRef} {...drop.droppableProps}>
+                  <Draggable draggableId={index + ""} index={+index}>
+                    {(drag, snapshot) => (
+                      <BoardContainer>
+                        {boards.map((board) => (
+                          <BoardSample
+                            key={board.id}
+                            ref={drag.innerRef}
+                            {...drag.dragHandleProps}
+                            {...drag.draggableProps}
+                            $isDragging={snapshot.isDragging}
+                          >
+                            <form>
+                              <input type="text" placeholder="board name" />
+                            </form>
+                          </BoardSample>
+                        ))}
+                      </BoardContainer>
+                    )}
+                  </Draggable>
+                  {drop.placeholder}
+                </div>
+              )}
+            </Droppable> */}
+
             {Object.keys(todos).map((boardId) => (
               <Boards todos={todos[boardId]} boardId={boardId} key={boardId} />
             ))}
@@ -150,3 +208,12 @@ function App() {
 }
 
 export default App;
+
+// {boards &&
+//   boards.map((board) => (
+//     <BoardSample key={board.id}>
+//       <form onSubmit={onSubmitBoardName}>
+//         <input type="text" placeholder="board name" />
+//       </form>
+//     </BoardSample>
+//   ))}

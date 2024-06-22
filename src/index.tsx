@@ -54,6 +54,7 @@ body {
   width: 100vw;
   height: 100vh;
   background: linear-gradient(to right, #ddd6f3, #faaca8);
+  overflow: hidden;
 }
 `;
 
